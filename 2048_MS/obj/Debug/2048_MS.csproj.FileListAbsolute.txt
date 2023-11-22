@@ -1,0 +1,7 @@
+C:\Users\pd41qks\source\repos\2048_MS\2048_MS\bin\Debug\2048_MS.exe.config
+C:\Users\pd41qks\source\repos\2048_MS\2048_MS\bin\Debug\2048_MS.exe
+C:\Users\pd41qks\source\repos\2048_MS\2048_MS\bin\Debug\2048_MS.pdb
+C:\Users\pd41qks\source\repos\2048_MS\2048_MS\obj\Debug\2048_MS.csproj.AssemblyReference.cache
+C:\Users\pd41qks\source\repos\2048_MS\2048_MS\obj\Debug\2048_MS.csproj.CoreCompileInputs.cache
+C:\Users\pd41qks\source\repos\2048_MS\2048_MS\obj\Debug\2048_MS.exe
+C:\Users\pd41qks\source\repos\2048_MS\2048_MS\obj\Debug\2048_MS.pdb
