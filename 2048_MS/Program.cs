@@ -191,8 +191,7 @@ namespace _2048_MS
             // Effacer la console pour afficher la nouvelle grille
             Console.Clear();
 
-            // Afficher le score actuel du joueur
-            Console.WriteLine("Score: " + score);
+            
 
             // Parcourir la grille et afficher chaque cellule
             for (int i = 0; i < 4; i++)
