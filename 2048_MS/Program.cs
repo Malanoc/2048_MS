@@ -107,20 +107,14 @@ namespace _2048_MS
                 board[row, col] = (new Random().Next(2) + 1) * 2; // Soit 2, soit 4
             }
         }
-       // Déplace les tuiles dans la grille en fonction de la direction spécifiée.
         private static bool DeplaceTuile(int dh, int dv)
         {
-            // dh = La direction horizontale du déplacement(-1 pour gauche, 1 pour droite).
-            // dv = La direction verticale du déplacement (-1 pour haut, 1 pour bas).
-            // moved : Indique si des tuiles ont été déplacées pendant l'exécution de la fonction. Si des tuiles ont été déplacées, la valeur est true, sinon elle est false.
             bool moved = false;
 
-            //  Determine jusqu'où incrémenter le board en fonction de la direction.
             int startRow, startCol, endRow, endCol;
-            // Configuration des indices de début et de fin en fonction de la direction
+
             if (dh == 1) // mouvement vers la droite
             {
-                startRow = 0;
                 startRow = 0;
                 startCol = 0;
                 endRow = 3;
@@ -153,50 +147,35 @@ namespace _2048_MS
                 return false;
             }
 
-            // Parcours de la grille et déplacement des tuiles
+            // Parcours des lignes de la grille en fonction de la direction spécifiée
             for (int i = startRow; i <= endRow; i++)
             {
+                // Parcours des colonnes de la grille en fonction de la direction spécifiée
                 for (int j = startCol; j <= endCol; j++)
                 {
+                    // Vérifie si la cellule actuelle n'est pas vide
                     if (board[i, j] != 0)
                     {
-                        /* newRow, newCol (int) : Représentent les nouvelles positions calculées lors du déplacement des tuiles. 
-                        Ces variables sont mises à jour dans la boucle while pour déterminer la destination finale de chaque tuile.*/
+                        // Initialise les nouvelles positions de la tuile aux positions actuelles
                         int newRow = i;
                         int newCol = j;
-                        // Déplacement de la tuile dans la direction spécifiée
+
+                        // Continue à déplacer la tuile dans la direction spécifiée jusqu'à atteindre une limite ou une autre tuile
                         while (newRow + dv >= 0 && newRow + dv <= 3 && newCol + dh >= 0 && newCol + dh <= 3 &&
                                (board[newRow + dv, newCol + dh] == 0 || board[newRow + dv, newCol + dh] == board[i, j]))
                         {
+                            // Met à jour les nouvelles positions de la tuile
                             newRow += dv;
                             newCol += dh;
                         }
 
-                        // Si la tuile peut être déplacée, elle l'est. 
-                        // Vérifie si la tuile a été déplacée à une nouvelle position dans la grille
+                        // Vérifie si la tuile a effectivement été déplacée vers une nouvelle position
                         if (newRow != i || newCol != j)
                         {
-                            // Vérifie si la tuile à la nouvelle position peut fusionner avec la tuile d'origine
-                            if (board[newRow, newCol] == board[i, j])
-                            {
-                                // Fusion des tuiles : la valeur de la tuile à la nouvelle position est doublée
-                                board[newRow, newCol] *= 2;
-
-                                // Met à jour le score en ajoutant la nouvelle valeur de la tuile fusionnée
-                                score += board[newRow, newCol];
-
-                                // La tuile d'origine est vidée après la fusion
-                                board[i, j] = 0;
-                            }
-                            else
-                            {
-                                // Mouvement des tuiles : la tuile d'origine est déplacée vers la nouvelle position
-                                board[newRow, newCol] = board[i, j];
-
-                                // La tuile d'origine est vidée de sa position initiale
-                                board[i, j] = 0;
-                            }
-
+                            // Déplace la tuile vers la nouvelle position
+                            board[newRow, newCol] = board[i, j];
+                            // Vide la position d'origine de la tuile
+                            board[i, j] = 0;
                             // Indique que des tuiles ont été déplacées pendant cette itération
                             moved = true;
                         }
@@ -204,9 +183,10 @@ namespace _2048_MS
                 }
             }
 
+            // Retourne true si des tuiles ont été déplacées, sinon retourne false
             return moved;
         }
-        private static void AffichageBoard()
+            private static void AffichageBoard()
         {
             // Effacer la console pour afficher la nouvelle grille
             Console.Clear();
