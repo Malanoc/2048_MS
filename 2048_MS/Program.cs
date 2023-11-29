@@ -172,31 +172,13 @@ namespace _2048_MS
                             newCol += dh;
                         }
 
-                        // Si la tuile peut être déplacée, elle l'est. 
-                        // Vérifie si la tuile a été déplacée à une nouvelle position dans la grille
+                        // Vérifie si la tuile a effectivement été déplacée vers une nouvelle position
                         if (newRow != i || newCol != j)
                         {
-                            // Vérifie si la tuile à la nouvelle position peut fusionner avec la tuile d'origine
-                            if (board[newRow, newCol] == board[i, j])
-                            {
-                                // Fusion des tuiles : la valeur de la tuile à la nouvelle position est doublée
-                                board[newRow, newCol] *= 2;
-
-                                // Met à jour le score en ajoutant la nouvelle valeur de la tuile fusionnée
-                                score += board[newRow, newCol];
-
-                                // La tuile d'origine est vidée après la fusion
-                                board[i, j] = 0;
-                            }
-                            else
-                            {
-                                // Mouvement des tuiles : la tuile d'origine est déplacée vers la nouvelle position
-                                board[newRow, newCol] = board[i, j];
-
-                                // La tuile d'origine est vidée de sa position initiale
-                                board[i, j] = 0;
-                            }
-
+                            // Déplace la tuile vers la nouvelle position
+                            board[newRow, newCol] = board[i, j];
+                            // Vide la position d'origine de la tuile
+                            board[i, j] = 0;
                             // Indique que des tuiles ont été déplacées pendant cette itération
                             moved = true;
                         }
@@ -204,15 +186,13 @@ namespace _2048_MS
                 }
             }
 
+            // Retourne true si des tuiles ont été déplacées, sinon retourne false
             return moved;
-        }
+        }   
         private static void AffichageBoard()
         {
             // Effacer la console pour afficher la nouvelle grille
             Console.Clear();
-
-            // Afficher le score actuel du joueur
-            Console.WriteLine("Score: " + score);
 
             // Parcourir la grille et afficher chaque cellule
             for (int i = 0; i < 4; i++)
