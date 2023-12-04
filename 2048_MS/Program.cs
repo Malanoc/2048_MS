@@ -9,6 +9,7 @@ namespace _2048_MS
     internal class Program
     {
         private static int[,] board = new int[4, 4];
+        private static bool[,] fusionTuile = new bool[4, 4];
         private static int score = 0;
 
         static void Main(string[] args)
@@ -186,29 +187,56 @@ namespace _2048_MS
                         {
                             if (board[newRow, newCol] == board[i, j])
                             {
-                                // combine les tuiles et incrémente le score
-                                board[newRow, newCol] *= 2;
-                                score += board[newRow, newCol];
-                                board[i, j] = 0;
+                                // Vérifie si la fusion n'a pas encore eu lieu dans cette case lors de ce mouvement
+                                if (!fusionTuile[newRow, newCol])
+                                {
+                                    // Fusionne les tuiles et incrémente le score
+                                    board[newRow, newCol] *= 2;
+                                    score += board[newRow, newCol];
+                                    board[i, j] = 0;
+
+                                    // Marque la fusion comme effectuée dans cette case
+                                    fusionTuile[newRow, newCol] = true;
+                                    moved = true;
+                                }
+                                else
+                                {
+                                    // Déplace les tuiles sans fusion, car la fusion a déjà eu lieu dans cette case
+                                    board[newRow, newCol] = board[i, j];
+                                    board[i, j] = 0;
+                                    moved = true;
+                                }
                             }
                             else
                             {
-                                // déplace les tuiles qui ne peuvent pas être combinées
+                                // Déplace les tuiles qui ne peuvent pas être combinées
                                 board[newRow, newCol] = board[i, j];
                                 board[i, j] = 0;
+                                moved = true;
                             }
-                            moved = true;
                         }
                     }
                 }
             }
 
+            // Réinitialise le tableau des fusions pour le prochain mouvement
+            ResetFusion();
+
             // Retourne true si des tuiles ont été déplacées, sinon retourne false
             return moved;
         }
-<<<<<<< Updated upstream
-            private static void AffichageBoard()
-=======
+
+        // Fonction pour réinitialiser le tableau des fusions
+        private static void ResetFusion()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    fusionTuile[i, j] = false;
+                }
+            }
+        }
 
         private static bool Partiefini()
         {
@@ -257,17 +285,15 @@ namespace _2048_MS
             return false; // Aucune tuile de valeur 2048 n'est présente. 
         }
         private static void AffichageBoard()
->>>>>>> Stashed changes
+
         {
             // Effacer la console pour afficher la nouvelle grille
             Console.Clear();
 
-<<<<<<< Updated upstream
-            
-=======
+
             // Afficher le score actuel du joueur
             Console.WriteLine("Score: " + score);
->>>>>>> Stashed changes
+
 
             // Parcourir la grille et afficher chaque cellule
             for (int i = 0; i < 4; i++)
