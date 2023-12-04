@@ -55,6 +55,18 @@ namespace _2048_MS
                     RandomTuile();
                     AffichageBoard();
                 }
+                // Vérifie si le jeu est terminé (plus de mouvements possibles)
+                if (Partiefini())
+                {
+                    Console.WriteLine("Game Over! Your score: " + score);
+                    break;
+                }
+                // Vérifie si le joueur a gagné (atteint la tuile 2048)
+                if (PartieGagne())
+                {
+                    Console.WriteLine("You win! Your score: " + score);
+                    break;
+                }
             }
         }
         private static void DebutJeu()
@@ -172,11 +184,19 @@ namespace _2048_MS
                         // Vérifie si la tuile a effectivement été déplacée vers une nouvelle position
                         if (newRow != i || newCol != j)
                         {
-                            // Déplace la tuile vers la nouvelle position
-                            board[newRow, newCol] = board[i, j];
-                            // Vide la position d'origine de la tuile
-                            board[i, j] = 0;
-                            // Indique que des tuiles ont été déplacées pendant cette itération
+                            if (board[newRow, newCol] == board[i, j])
+                            {
+                                // combine les tuiles et incrémente le score
+                                board[newRow, newCol] *= 2;
+                                score += board[newRow, newCol];
+                                board[i, j] = 0;
+                            }
+                            else
+                            {
+                                // déplace les tuiles qui ne peuvent pas être combinées
+                                board[newRow, newCol] = board[i, j];
+                                board[i, j] = 0;
+                            }
                             moved = true;
                         }
                     }
@@ -186,12 +206,68 @@ namespace _2048_MS
             // Retourne true si des tuiles ont été déplacées, sinon retourne false
             return moved;
         }
+<<<<<<< Updated upstream
             private static void AffichageBoard()
+=======
+
+        private static bool Partiefini()
+        {
+            // Vérifie s'il reste des tuiles vides.
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (board[i, j] == 0)
+                    {
+                        return false; //La partie n'est pas finie
+                    }
+                }
+            }
+
+            //Vérifie s'il reste des tuiles adjacentes de valeurs identiques. 
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if ((i - 1 >= 0 && board[i, j] == board[i - 1, j]) ||
+                        (i + 1 <= 3 && board[i, j] == board[i + 1, j]) ||
+                        (j - 1 >= 0 && board[i, j] == board[i, j - 1]) ||
+                        (j + 1 <= 3 && board[i, j] == board[i, j + 1]))
+                    {
+                        return false; // La partie n'est pas terminée
+                    }
+                }
+            }
+
+            return true; // Plus de mouvements/fusion possible. La partie est terminée. 
+        }
+        private static bool PartieGagne()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    if (board[i, j] == 2048)
+                    {
+                        return true; // Le joueur a gagné. Partie finie.
+                    }
+                }
+            }
+
+            return false; // Aucune tuile de valeur 2048 n'est présente. 
+        }
+        private static void AffichageBoard()
+>>>>>>> Stashed changes
         {
             // Effacer la console pour afficher la nouvelle grille
             Console.Clear();
 
+<<<<<<< Updated upstream
             
+=======
+            // Afficher le score actuel du joueur
+            Console.WriteLine("Score: " + score);
+>>>>>>> Stashed changes
 
             // Parcourir la grille et afficher chaque cellule
             for (int i = 0; i < 4; i++)
