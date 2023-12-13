@@ -14,8 +14,6 @@ namespace _2048_MS
 
         static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.BackgroundColor = ConsoleColor.Green;
 
             DebutJeu(); // Initialise le jeu en plaçant deux tuiles aléatoires sur le plateau
             AffichageBoard(); // Affiche le plateau de jeu initial (appelé board dans la suite des commentaires)
@@ -23,12 +21,14 @@ namespace _2048_MS
             // Boucle principale du jeu qui s'exécute indéfiniment jusqu'à ce que l'utilisateur quitte
             while (true)
             {
+               
+
                 // Récupère la touche pressée par l'utilisateur sans afficher la touche à l'écran
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 ConsoleKey key = keyInfo.Key;
 
-                // Quitte la boucle si l'utilisateur appuie sur la touche 'Q'
-                if (key == ConsoleKey.Q)
+                // Quitte la boucle si l'utilisateur appuie sur la touche 'C'
+                if (key == ConsoleKey.C)
                     break;
 
                 // Variable pour indiquer si une tuile a été déplacée lors du dernier mouvement
@@ -55,17 +55,26 @@ namespace _2048_MS
                 {
                     RandomTuile();
                     AffichageBoard();
+                    // Afficher le score actuel du joueur
+                    Console.WriteLine("Score: " + score);
+
+                    // Afficher les instructions pour les déplacements et la sortie du jeu
+                    Console.WriteLine("Utilisez les flèches directionnelles pour déplacer les tuiles. Appuyez sur c pour quitter.");
                 }
                 // Vérifie si le jeu est terminé (plus de mouvements possibles)
                 if (Partiefini())
                 {
-                    Console.WriteLine("Game Over! Your score: " + score);
+                    Console.WriteLine("Game Over! Votre score: " + score);
+                    Console.WriteLine("Appuyer sur une touche pour quitter.");
+                    Console.ReadKey(); // Attend une touche avant de quitter
                     break;
                 }
                 // Vérifie si le joueur a gagné (atteint la tuile 2048)
                 if (PartieGagne())
                 {
                     Console.WriteLine("You win! Your score: " + score);
+                    Console.WriteLine("Appuyer sur une touche pour quitter.");
+                    Console.ReadKey(); // Attend une touche avant de quitter
                     break;
                 }
             }
@@ -133,7 +142,7 @@ namespace _2048_MS
                 endRow = 3;
                 endCol = 2;
             }
-            else if (dh == -1) //mouvement vers la gauche
+            else if (dh == -1) // mouvement vers la gauche
             {
                 startRow = 0;
                 startCol = 1;
@@ -160,83 +169,73 @@ namespace _2048_MS
                 return false;
             }
 
-            // Parcours des lignes de la grille en fonction de la direction spécifiée
-            for (int i = startRow; i <= endRow; i++)
+           // Parcours des lignes de la grille en fonction de la direction spécifiée
+    for (int i = startRow; i <= endRow; i++)
+    {
+        // Parcours des colonnes de la grille en fonction de la direction spécifiée
+        for (int j = startCol; j <= endCol; j++)
+        {
+            // Vérifie si la cellule actuelle n'est pas vide
+            if (board[i, j] != 0)
             {
-                // Parcours des colonnes de la grille en fonction de la direction spécifiée
-                for (int j = startCol; j <= endCol; j++)
+                // Initialise les nouvelles positions de la tuile aux positions actuelles
+                int newRow = i;
+                int newCol = j;
+
+                // Continue à déplacer la tuile dans la direction spécifiée jusqu'à atteindre une limite ou une autre tuile
+                while (newRow + dv >= 0 && newRow + dv <= 3 && newCol + dh >= 0 && newCol + dh <= 3 &&
+                       (board[newRow + dv, newCol + dh] == 0 || board[newRow + dv, newCol + dh] == board[i, j]))
                 {
-                    // Vérifie si la cellule actuelle n'est pas vide
-                    if (board[i, j] != 0)
+                    // Met à jour les nouvelles positions de la tuile
+                    newRow += dv;
+                    newCol += dh;
+                }
+
+                // Vérifie si la tuile a effectivement été déplacée vers une nouvelle position
+                if (newRow != i || newCol != j)
+                {
+                    if (board[newRow, newCol] == board[i, j])
                     {
-                        // Initialise les nouvelles positions de la tuile aux positions actuelles
-                        int newRow = i;
-                        int newCol = j;
-
-                        // Continue à déplacer la tuile dans la direction spécifiée jusqu'à atteindre une limite ou une autre tuile
-                        while (newRow + dv >= 0 && newRow + dv <= 3 && newCol + dh >= 0 && newCol + dh <= 3 &&
-                               (board[newRow + dv, newCol + dh] == 0 || board[newRow + dv, newCol + dh] == board[i, j]))
+                        // Vérifie si la fusion n'a pas encore eu lieu dans cette case lors de ce mouvement
+                        if (board[newRow, newCol] != 0)
                         {
-                            // Met à jour les nouvelles positions de la tuile
-                            newRow += dv;
-                            newCol += dh;
+                            // Fusionne les tuiles et incrémente le score
+                            board[newRow, newCol] *= 2;
+                            score += board[newRow, newCol];
+                            board[i, j] = 0;
+                            moved = true;
                         }
-
-                        // Vérifie si la tuile a effectivement été déplacée vers une nouvelle position
-                        if (newRow != i || newCol != j)
-                        {
-                            if (board[newRow, newCol] == board[i, j])
-                            {
-                                // Vérifie si la fusion n'a pas encore eu lieu dans cette case lors de ce mouvement
-                                if (!fusionTuile[newRow, newCol])
-                                {
-                                    // Fusionne les tuiles et incrémente le score
-                                    board[newRow, newCol] *= 2;
-                                    score += board[newRow, newCol];
-                                    board[i, j] = 0;
-
-                                    // Marque la fusion comme effectuée dans cette case
-                                    fusionTuile[newRow, newCol] = true;
-                                    moved = true;
-                                }
-                                else
-                                {
-                                    // Déplace les tuiles sans fusion, car la fusion a déjà eu lieu dans cette case
-                                    board[newRow, newCol] = board[i, j];
-                                    board[i, j] = 0;
-                                    moved = true;
-                                }
-                            }
-                            else
-                            {
-                                // Déplace les tuiles qui ne peuvent pas être combinées
-                                board[newRow, newCol] = board[i, j];
-                                board[i, j] = 0;
-                                moved = true;
-                            }
-                        }
+                    }
+                    else
+                    {
+                        // Déplace les tuiles qui ne peuvent pas être combinées
+                        board[newRow, newCol] = board[i, j];
+                        board[i, j] = 0;
+                        moved = true;
                     }
                 }
             }
-
-            // Réinitialise le tableau des fusions pour le prochain mouvement
-            ResetFusion();
-
-            // Retourne true si des tuiles ont été déplacées, sinon retourne false
-            return moved;
         }
+    }
+
+    // Réinitialise le tableau des fusions pour le prochain mouvement
+    ResetFusion();
+    // Retourne true si des tuiles ont été déplacées, sinon retourne false
+    return moved;
+}
+
 
         // Fonction pour réinitialiser le tableau des fusions
         private static void ResetFusion()
-        {
-            for (int i = 0; i < 4; i++)
             {
-                for (int j = 0; j < 4; j++)
-                {
-                    fusionTuile[i, j] = false;
-                }
+             for (int i = 0; i < 4; i++)
+             {
+                 for (int j = 0; j < 4; j++)
+                 {
+                     fusionTuile[i, j] = false;
+                 }
+             }
             }
-        }
 
         private static bool Partiefini()
         {
@@ -290,25 +289,65 @@ namespace _2048_MS
             // Effacer la console pour afficher la nouvelle grille
             Console.Clear();
 
-
-            // Afficher le score actuel du joueur
-            Console.WriteLine("Score: " + score);
-
-
             // Parcourir la grille et afficher chaque cellule
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
                 {
+                    // Changer la couleur en fonction de la valeur de la cellule
+                    switch (board[i, j])
+                    {
+                        case 0:
+                            Console.ForegroundColor = ConsoleColor.Black; // Cellule vide
+                            break;
+                        case 2:
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            break;
+                        case 4:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            break;
+                        case 8:
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            break;
+                        case 16:
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            break;
+                        case 32:
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            break;
+                        case 64:
+                            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                            break;
+                        case 128:
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            break;
+                        case 256:
+                            Console.ForegroundColor= ConsoleColor.Gray;
+                            break;
+                        case 512:
+                            Console.ForegroundColor = ConsoleColor.DarkBlue;
+                            break;
+                        case 1024:
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            break;
+                        case 2048:
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            break;
+                        default:
+                            Console.ForegroundColor = ConsoleColor.White; // Couleur par défaut pour les autres valeurs
+                            break;
+                    }
+
                     // Afficher la valeur de la cellule suivie d'une tabulation
                     Console.Write(board[i, j] + "\t");
                 }
                 // Aller à la ligne après chaque ligne de la grille
                 Console.WriteLine();
             }
+            // Rétablir la couleur par défaut de la console
+            Console.ForegroundColor = ConsoleColor.White;
 
-            // Afficher les instructions pour les déplacements et la sortie du jeu
-            Console.WriteLine("Utilisez les flèches directionnelles pour déplacer les tuiles. Appuyez sur q pour quitter.");
+          
         }
     }
 }
