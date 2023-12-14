@@ -2,6 +2,9 @@
 
 namespace _2048_MS
 {
+/// Auteur: Marc Schilter
+/// Projet 2048 - MA-20
+/// CPNV SI-CA1a - 2023
     internal class Program
     {
         private static int[,] board = new int[4, 4];
