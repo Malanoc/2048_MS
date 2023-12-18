@@ -36,7 +36,8 @@ namespace _2048_MS
                     Console.WriteLine("Score: " + score);
 
                     // Afficher les instructions pour les déplacements et la sortie du jeu
-                    Console.WriteLine("Utilisez les flèches directionnelles pour déplacer les tuiles. Appuyez sur c pour quitter.");
+                    Console.WriteLine("Utilisez les flèches directionnelles pour déplacer les tuiles. \n");
+                    Console.WriteLine("Appuyez sur C pour quitter.");
                 }
                 // Vérifie si le joueur a gagné (atteint la tuile 2048)
                 if (PartieGagne())
@@ -293,7 +294,7 @@ namespace _2048_MS
                     switch (board[i, j])
                     {
                         case 0:
-                            Console.ForegroundColor = ConsoleColor.Black; // Cellule vide
+                            Console.ForegroundColor = ConsoleColor.DarkGray; // Cellule vide
                             break;
                         case 2:
                             Console.ForegroundColor = ConsoleColor.Blue;
@@ -317,7 +318,7 @@ namespace _2048_MS
                             Console.ForegroundColor = ConsoleColor.DarkRed;
                             break;
                         case 256:
-                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
                             break;
                         case 512:
                             Console.ForegroundColor = ConsoleColor.DarkBlue;
